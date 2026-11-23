@@ -210,7 +210,7 @@ function render() {
       <div class="field"><label>Announcement bar</label><input id="set-announcement" value="${esc(s.announcement || '')}"></div>
       <button class="btn gold" onclick="saveSettings()">Save Settings</button></div>
       <div class="panel-box"><h3>Reset admin password</h3><p class="muted">Use at least 10 characters. You will be signed out after changing it.</p>
-      <form id="passwordResetForm" class="settings-form"><div class="field"><label>Current password</label><span class="password-field"><input name="currentPassword" type="password" required><button type="button" class="password-toggle" aria-label="Show password">◉</button></span></div><div class="field"><label>New password</label><span class="password-field"><input name="newPassword" type="password" minlength="10" required><button type="button" class="password-toggle" aria-label="Show password">◉</button></span></div><button class="btn gold" type="submit">Update password</button><p role="status" class="muted"></p></form></div>`;
+      <form id="passwordResetForm" class="settings-form"><div class="field"><label>Current password</label><span class="password-field"><input name="currentPassword" type="password" required><button type="button" class="password-toggle" aria-label="Show password"><svg class="eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.5"/></svg></button></span></div><div class="field"><label>New password</label><span class="password-field"><input name="newPassword" type="password" minlength="10" required><button type="button" class="password-toggle" aria-label="Show password"><svg class="eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.5"/></svg></button></span></div><button class="btn gold" type="submit">Update password</button><p role="status" class="muted"></p></form></div>`;
   }
   v.querySelector('#passwordResetForm')?.addEventListener('submit', async (event) => {
     event.preventDefault(); const form = event.currentTarget; const status = form.querySelector('[role=status]');
@@ -220,7 +220,7 @@ function render() {
   });
   v.querySelectorAll('.password-toggle').forEach((button) => button.addEventListener('click', () => {
     const input = button.parentElement.querySelector('input'); const visible = input.type === 'text';
-    input.type = visible ? 'password' : 'text'; button.textContent = visible ? '◉' : '◌'; button.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
+    input.type = visible ? 'password' : 'text'; button.classList.toggle('is-visible', !visible); button.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
   }));
   const orderFilters = v.querySelectorAll('[data-order-filter]');
   if (orderFilters.length) {

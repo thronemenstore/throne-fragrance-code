@@ -253,6 +253,8 @@ body:has(.drawer[open]) { overflow: hidden; }
 .password-field input { padding-right: 48px; }
 .password-toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); width: 34px; height: 34px; border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 14px; }
 .password-toggle:hover { color: var(--forest); }
+.eye-icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; display: block; margin: auto; }
+.password-toggle.is-visible .eye-icon { opacity: .55; }
 .admin-login-submit { width: 100%; justify-content: space-between; margin-top: 12px; padding: 15px 18px; }
 .admin-login-submit span { font-size: 1.3rem; }
 .admin-login-submit.is-loading { opacity: .7; }
