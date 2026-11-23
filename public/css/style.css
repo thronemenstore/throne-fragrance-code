@@ -115,8 +115,8 @@ th { font-size: 12px; letter-spacing: .08em; }
   --line: #e3dfd6;
   --line2: #c6c9bf;
   --green: #285845;
-  --display: "Playfair Display", Georgia, serif;
-  --sans: "DM Sans", system-ui, sans-serif;
+  --display: "Inter", system-ui, sans-serif;
+  --sans: "Inter", system-ui, sans-serif;
 }
 body { font-family: var(--sans); color: var(--ink); }
 .wrap { width: 100%; max-width: 1320px; padding-inline: clamp(16px, 4vw, 56px); }
