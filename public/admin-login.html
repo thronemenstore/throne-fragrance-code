@@ -8,10 +8,13 @@
 </head>
 <body class="admin-login-page">
   <main class="admin-login-card">
-    <a class="admin-login-brand" href="/"><img src="/images/throne-logo-mark.webp" alt=""><span>THRONE<small>FRAGRANCE</small></span></a>
-    <p class="eyebrow">Private workspace</p>
-    <h1>Welcome back.</h1>
-    <p class="admin-login-intro">Sign in to manage products, orders and your storefront.</p>
+    <section class="admin-login-copy">
+      <a class="admin-login-brand" href="/"><img src="/images/throne-logo-mark.webp" alt=""><span>THRONE<small>FRAGRANCE</small></span></a>
+      <p class="eyebrow">Private workspace</p>
+      <h1>Welcome back.</h1>
+      <p class="admin-login-intro">Sign in to manage products, orders and your storefront.</p>
+    </section>
+    <section class="admin-login-form-wrap">
     <form id="adminLoginForm">
       <label>Username<input name="username" autocomplete="username" value="admin" required></label>
       <label>Password<input name="password" type="password" autocomplete="current-password" required autofocus></label>
@@ -19,6 +22,7 @@
       <button class="btn btn-primary admin-login-submit" type="submit">Sign in to dashboard <span>→</span></button>
     </form>
     <a class="admin-login-back" href="/">← Back to storefront</a>
+    </section>
   </main>
   <script>
     document.getElementById('adminLoginForm').addEventListener('submit', async (event) => {

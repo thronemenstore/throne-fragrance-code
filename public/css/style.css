@@ -237,11 +237,11 @@ footer { padding-block: 38px; color: #e8ede8; background: var(--forest); }
 body:has(.drawer[open]) { overflow: hidden; }
 .admin-page { background: var(--surface); }
 .admin-login-page { min-height: 100vh; display: grid; place-items: center; padding: 28px; background: radial-gradient(circle at 15% 10%, #294b3d 0, transparent 38%), var(--forest); }
-.admin-login-card { width: min(100%, 520px); padding: clamp(34px, 6vw, 64px); background: rgba(255,253,248,.98); border: 1px solid rgba(226, 191, 92, .38); border-radius: 18px; box-shadow: 0 28px 90px rgba(0,0,0,.3), 0 0 0 1px rgba(255,255,255,.08); }
+.admin-login-card { width: min(100%, 860px); display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(34px, 7vw, 88px); padding: clamp(34px, 6vw, 68px); background: rgba(255,253,248,.98); border: 1px solid rgba(226, 191, 92, .38); border-radius: 8px; box-shadow: 0 28px 90px rgba(0,0,0,.3), 0 0 0 1px rgba(255,255,255,.08); }
 .admin-login-brand { display: inline-flex; align-items: center; gap: 12px; color: var(--forest); font: 700 1.05rem/1 var(--body); letter-spacing: .25em; text-decoration: none; }
 .admin-login-brand img { width: 48px; height: 48px; object-fit: contain; background: var(--forest); }
 .admin-login-brand small { display: block; margin-top: 7px; font-size: .58rem; letter-spacing: .36em; font-weight: 500; }
-.admin-login-card .eyebrow { margin: 64px 0 12px; color: var(--brass); }
+.admin-login-card .eyebrow { margin: 72px 0 12px; color: var(--brass); }
 .admin-login-card h1 { margin: 0; font: 400 clamp(2.4rem, 7vw, 4.1rem)/.95 var(--display); color: var(--forest); letter-spacing: -.04em; }
 .admin-login-intro { max-width: 32ch; margin: 18px 0 34px; color: var(--muted); }
 .admin-login-card label { display: block; margin: 18px 0; color: var(--forest); font-weight: 700; font-size: .86rem; }
@@ -252,6 +252,7 @@ body:has(.drawer[open]) { overflow: hidden; }
 .admin-login-submit.is-loading { opacity: .7; }
 .admin-login-error { min-height: 1.3em; margin: 8px 0 0; color: #a32f28; font-size: .88rem; }
 .admin-login-back { display: inline-block; margin-top: 30px; color: var(--muted); font-size: .9rem; }
+@media (max-width: 680px) { .admin-login-card { grid-template-columns: 1fr; gap: 24px; padding: 30px 24px; } .admin-login-card .eyebrow { margin-top: 34px; } }
 .admin-header { background: #fff; border-bottom: 1px solid var(--line); }
 .admin-header-actions { display: flex; align-items: center; gap: 8px; }
 @media (max-width: 560px) { .admin-header-actions .btn:first-child { display: none; } .admin-header-actions .btn { padding: 9px 11px; } }
