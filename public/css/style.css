@@ -331,3 +331,5 @@ body:has(.drawer[open]) { overflow: hidden; }
   .mobile-menu[open] { animation: none; }
   *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
 }
+/* Clean link treatment: rely on color/hover states instead of underlines. */
+a, a:hover, .text-link { text-decoration: none; }
