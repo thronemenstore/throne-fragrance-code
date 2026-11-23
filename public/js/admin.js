@@ -214,9 +214,12 @@ function render() {
   }
   v.querySelector('#passwordResetForm')?.addEventListener('submit', async (event) => {
     event.preventDefault(); const form = event.currentTarget; const status = form.querySelector('[role=status]');
-    const response = await fetch('/api/admin/password', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
-    const data = await response.json(); status.textContent = response.ok ? 'Password updated. Redirecting to sign in…' : (data.error || 'Unable to update password.');
-    if (response.ok) setTimeout(() => location.href = '/admin', 900);
+    status.textContent = 'Updating…';
+    try {
+      const response = await fetch('/api/admin/password', { method: 'POST', credentials: 'same-origin', headers: {'Content-Type':'application/json'}, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+      const data = await response.json(); status.textContent = response.ok ? 'Password updated. Redirecting to sign in…' : (data.error || 'Unable to update password.');
+      if (response.ok) setTimeout(() => location.href = '/admin', 900);
+    } catch (_) { status.textContent = 'Server connection failed. Please restart the server and try again.'; }
   });
   v.querySelectorAll('.password-toggle').forEach((button) => button.addEventListener('click', () => {
     const input = button.parentElement.querySelector('input'); const visible = input.type === 'text';

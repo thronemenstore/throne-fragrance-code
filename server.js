@@ -31,7 +31,7 @@ function readCookie(req, name) {
 
 function requireAdmin(req, res, next) {
   res.set('Cache-Control', 'no-store');
-  if (req.path === '/login' || req.path === '/logout') return next();
+  if (req.path === '/login' || req.path === '/logout' || req.path === '/password') return next();
   if (!credentials) return res.status(503).send('Set ADMIN_PASSWORD and restart the server to enable admin access.');
   const session = readCookie(req, 'throne_admin');
   const expiry = adminSessions.get(session);
