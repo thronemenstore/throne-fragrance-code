@@ -21,6 +21,7 @@ const adminUser = process.env.ADMIN_USER || 'admin';
 const digest = (value) => createHash('sha256').update(value).digest();
 const credentials = adminPassword && digest(adminUser + ':' + adminPassword);
 const adminSessions = new Map();
+const loginAttempts = new Map();
 
 function readCookie(req, name) {
   const cookies = String(req.get('Cookie') || '').split(';');
@@ -33,6 +34,8 @@ function requireAdmin(req, res, next) {
   if (req.path === '/login') return next();
   if (!credentials) return res.status(503).send('Set ADMIN_PASSWORD and restart the server to enable admin access.');
   const session = readCookie(req, 'throne_admin');
+  const expiry = adminSessions.get(session);
+  if (expiry && expiry < Date.now()) adminSessions.delete(session);
   const match = /^Basic ([A-Za-z0-9+/=]+)$/i.exec(req.get('Authorization') || '');
   const validBasic = match && timingSafeEqual(digest(Buffer.from(match[1], 'base64')), credentials);
   if (!adminSessions.has(session) && !validBasic) return res.status(401).json({ error: 'Admin sign-in required.' });
@@ -51,12 +54,19 @@ app.post('/api/admin/login', (req, res) => {
   if (!credentials) return res.status(503).json({ error: 'ADMIN_PASSWORD is not configured on the server.' });
   const user = String(req.body?.username || '');
   const password = String(req.body?.password || '');
+  const ip = req.ip || req.socket.remoteAddress || 'unknown';
+  const attempt = loginAttempts.get(ip) || { count: 0, until: 0 };
+  if (attempt.until > Date.now()) return res.status(429).json({ error: 'Too many attempts. Try again in a minute.' });
   if (user !== adminUser || !timingSafeEqual(digest(user + ':' + password), credentials)) {
+    attempt.count += 1;
+    if (attempt.count >= 5) { attempt.count = 0; attempt.until = Date.now() + 60_000; }
+    loginAttempts.set(ip, attempt);
     return res.status(401).json({ error: 'Incorrect username or password.' });
   }
+  loginAttempts.delete(ip);
   const token = randomBytes(32).toString('hex');
   adminSessions.set(token, Date.now() + 1000 * 60 * 60 * 24 * 7);
-  res.set('Set-Cookie', `throne_admin=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800`);
+  res.set('Set-Cookie', `throne_admin=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`);
   res.json({ ok: true });
 });
 

@@ -5,6 +5,11 @@ let tab = 'products';
 let orderFilter = 'all';
 const orderStatuses = ['new', 'confirmed', 'dispatched', 'delivered', 'cancelled'];
 const $ = (s) => document.querySelector(s);
+document.getElementById('adminLogout')?.addEventListener('click', async () => {
+  const button = document.getElementById('adminLogout');
+  button.disabled = true;
+  try { await fetch('/api/admin/logout', { method: 'POST' }); } finally { location.href = '/admin'; }
+});
 const money = (n) => 'Rs. ' + Number(n || 0).toLocaleString('en-PK');
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
