@@ -252,7 +252,12 @@ body:has(.drawer[open]) { overflow: hidden; }
 .admin-login-submit.is-loading { opacity: .7; }
 .admin-login-error { min-height: 1.3em; margin: 8px 0 0; color: #a32f28; font-size: .88rem; }
 .admin-login-back { display: inline-block; margin-top: 30px; color: var(--muted); font-size: .9rem; }
-@media (max-width: 680px) { .admin-login-card { grid-template-columns: 1fr; gap: 24px; padding: 30px 24px; } .admin-login-card .eyebrow { margin-top: 34px; } }
+.admin-login-form-wrap { align-self: center; padding-left: clamp(24px, 5vw, 64px); border-left: 1px solid #e4dfd3; }
+.admin-form-kicker { margin: 0 0 10px; color: var(--brass); font-size: .7rem; font-weight: 700; letter-spacing: .18em; }
+.admin-login-form-wrap h2 { margin: 0 0 26px; color: var(--forest); font: 400 clamp(1.65rem, 3vw, 2.25rem)/1 var(--display); }
+.admin-login-submit { background: var(--forest); color: #fff; border-color: var(--forest); }
+.admin-login-submit:hover { background: #102d23; border-color: #102d23; }
+@media (max-width: 680px) { .admin-login-card { grid-template-columns: 1fr; gap: 24px; padding: 30px 24px; } .admin-login-card .eyebrow { margin-top: 34px; } .admin-login-form-wrap { padding-left: 0; border-left: 0; border-top: 1px solid #e4dfd3; padding-top: 24px; } }
 .admin-header { background: #fff; border-bottom: 1px solid var(--line); }
 .admin-header-actions { display: flex; align-items: center; gap: 8px; }
 @media (max-width: 560px) { .admin-header-actions .btn:first-child { display: none; } .admin-header-actions .btn { padding: 9px 11px; } }
