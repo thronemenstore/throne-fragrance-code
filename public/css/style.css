@@ -275,8 +275,13 @@ body:has(.drawer[open]) { overflow: hidden; }
 .stat b { color: var(--forest); margin-top: 5px; }
 .admin-tabs { border-bottom: 1px solid var(--line2); padding-bottom: 12px; }
 .admin-tabs .btn { transition: none; }
-.product-edit { margin: 8px 0; min-width: 280px; }
+.product-edit { margin: 0 8px 0 0; min-width: 280px; display: inline-block; vertical-align: middle; }
 .product-edit summary { cursor: pointer; color: var(--forest); font-weight: 700; font-size: .82rem; }
+.product-edit summary { display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: #fff; transition: background .2s, border-color .2s; }
+.product-edit summary:hover { background: var(--surface); border-color: var(--gold); }
+.product-edit[open] summary { background: var(--forest); color: #fff; border-color: var(--forest); }
+.panel-box table tr:not(:first-child):hover { background: #fcfbf7; }
+.panel-box table td { vertical-align: middle; }
 .product-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; padding: 12px; background: var(--surface); border: 1px solid var(--line); }
 .product-edit-grid label { display: grid; gap: 4px; font-size: .72rem; font-weight: 700; color: var(--muted); }
 .product-edit-grid .wide { grid-column: 1 / -1; }
