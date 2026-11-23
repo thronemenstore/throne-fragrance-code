@@ -332,4 +332,4 @@ body:has(.drawer[open]) { overflow: hidden; }
   *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
 }
 /* Clean link treatment: rely on color/hover states instead of underlines. */
-a, a:hover, .text-link { text-decoration: none; }
+a, a:hover, .text-link, footer a, .footer-preference, .footer-grid a { text-decoration: none !important; }
