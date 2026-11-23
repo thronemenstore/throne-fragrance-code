@@ -208,8 +208,16 @@ function render() {
       <div class="field"><label>Instagram URL</label><input id="set-instagram" value="${esc(s.instagram || '')}"></div>
       <div class="field"><label>Free shipping over (Rs.)</label><input id="set-free_ship_threshold" value="${esc(s.free_ship_threshold || '')}"></div>
       <div class="field"><label>Announcement bar</label><input id="set-announcement" value="${esc(s.announcement || '')}"></div>
-      <button class="btn gold" onclick="saveSettings()">Save Settings</button></div>`;
+      <button class="btn gold" onclick="saveSettings()">Save Settings</button></div>
+      <div class="panel-box"><h3>Reset admin password</h3><p class="muted">Use at least 10 characters. You will be signed out after changing it.</p>
+      <form id="passwordResetForm" class="settings-form"><div class="field"><label>Current password</label><input name="currentPassword" type="password" required></div><div class="field"><label>New password</label><input name="newPassword" type="password" minlength="10" required></div><button class="btn gold" type="submit">Update password</button><p role="status" class="muted"></p></form></div>`;
   }
+  v.querySelector('#passwordResetForm')?.addEventListener('submit', async (event) => {
+    event.preventDefault(); const form = event.currentTarget; const status = form.querySelector('[role=status]');
+    const response = await fetch('/api/admin/password', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+    const data = await response.json(); status.textContent = response.ok ? 'Password updated. Redirecting to sign in…' : (data.error || 'Unable to update password.');
+    if (response.ok) setTimeout(() => location.href = '/admin', 900);
+  });
   const orderFilters = v.querySelectorAll('[data-order-filter]');
   if (orderFilters.length) {
     const applyFilter = () => {

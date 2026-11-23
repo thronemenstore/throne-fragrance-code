@@ -19,7 +19,7 @@ app.use(express.json({ limit: '5mb' }));
 const adminPassword = process.env.ADMIN_PASSWORD;
 const adminUser = process.env.ADMIN_USER || 'admin';
 const digest = (value) => createHash('sha256').update(value).digest();
-const credentials = adminPassword && digest(adminUser + ':' + adminPassword);
+let credentials = adminPassword && digest(adminUser + ':' + adminPassword);
 const adminSessions = new Map();
 const loginAttempts = new Map();
 
@@ -81,6 +81,22 @@ app.post('/api/admin/logout', requireAdmin, (req, res) => {
 const dataDir = process.env.THRONE_DATA_DIR || path.join(__dirname, 'data');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 const db = new Database(path.join(dataDir, 'throne.db'));
+const savedAdminHashFile = path.join(dataDir, 'admin-password.sha256');
+if (fs.existsSync(savedAdminHashFile)) {
+  const saved = fs.readFileSync(savedAdminHashFile, 'utf8').trim();
+  if (/^[a-f0-9]{64}$/i.test(saved)) credentials = Buffer.from(saved, 'hex');
+}
+app.post('/api/admin/password', requireAdmin, (req, res) => {
+  const current = String(req.body?.currentPassword || '');
+  const next = String(req.body?.newPassword || '');
+  if (!credentials || !timingSafeEqual(digest(adminUser + ':' + current), credentials)) return res.status(401).json({ error: 'Current password is incorrect.' });
+  if (next.length < 10) return res.status(400).json({ error: 'New password must be at least 10 characters.' });
+  credentials = digest(adminUser + ':' + next);
+  fs.writeFileSync(savedAdminHashFile, credentials.toString('hex'), 'utf8');
+  adminSessions.clear();
+  res.set('Set-Cookie', 'throne_admin=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0');
+  res.json({ ok: true });
+});
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS products (
@@ -258,7 +274,7 @@ function phoneError(raw) {
 
 // ---------- Storefront API (live — reads the same DB as Admin) ----------
 const lookupPostEx = registerStoreManagement({ app, db, normalizePhone });
-app.get('/api/store', (req, res) => res.json(getStore()));
+app.get(['/api/store', '/api/products'], (req, res) => res.json(getStore()));
 app.get('/api/admin', (req, res) => res.json(getAdminState()));
 
 const insertOrder = db.prepare(`INSERT INTO orders
