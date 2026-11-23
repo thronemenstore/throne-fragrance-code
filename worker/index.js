@@ -12,6 +12,9 @@ export default { async fetch(request,env) {
   if(url.pathname==='/api/store'||url.pathname==='/api/products'){const [p,s]=await Promise.all([env.DB.prepare('SELECT * FROM products WHERE is_live=1 ORDER BY sort_order,id').all(),env.DB.prepare('SELECT key,value FROM settings').all()]);return json({products:p.results,settings:Object.fromEntries(s.results.map(r=>[r.key,r.value]))});}
   const rm=url.pathname.match(/^\/api\/reviews\/([^/]+)$/);if(request.method==='GET'&&rm){const r=await env.DB.prepare("SELECT display_name,rating,comment,created_at FROM reviews WHERE product_slug=? AND status='approved' ORDER BY id DESC LIMIT 100").bind(decodeURIComponent(rm[1])).all();return json(r.results);}
   if(url.pathname==='/api/health')return json({ok:true,runtime:'cloudflare-workers',database:'D1'});
-  if(url.pathname==='/admin'||url.pathname==='/admin/'||url.pathname==='/admin.html'){if(!(await isAdmin(request,env)))return env.ASSETS.fetch(new Request(new URL('/admin-login.html',url)));}
+  if(url.pathname==='/admin'||url.pathname==='/admin/'||url.pathname==='/admin.html'){
+    if(!(await isAdmin(request,env))) return env.ASSETS.fetch(new Request(new URL('/admin-login.html',url)));
+    return env.ASSETS.fetch(new Request(new URL('/admin.html',url)));
+  }
   return env.ASSETS.fetch(request);
 } };
