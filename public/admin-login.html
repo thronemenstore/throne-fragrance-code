@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin sign in — Throne Fragrance</title>
+  <link rel="icon" type="image/webp" href="/images/throne-logo-mark.webp">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-login-page">
+  <main class="admin-login-card">
+    <a class="admin-login-brand" href="/"><img src="/images/throne-logo-mark.webp" alt=""><span>THRONE<small>FRAGRANCE</small></span></a>
+    <p class="eyebrow">Private workspace</p>
+    <h1>Welcome back.</h1>
+    <p class="admin-login-intro">Sign in to manage products, orders and your storefront.</p>
+    <form id="adminLoginForm">
+      <label>Username<input name="username" autocomplete="username" value="admin" required></label>
+      <label>Password<input name="password" type="password" autocomplete="current-password" required autofocus></label>
+      <p id="adminLoginError" class="admin-login-error" role="alert"></p>
+      <button class="btn btn-primary admin-login-submit" type="submit">Sign in to dashboard <span>→</span></button>
+    </form>
+    <a class="admin-login-back" href="/">← Back to storefront</a>
+  </main>
+  <script>
+    document.getElementById('adminLoginForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget, error = document.getElementById('adminLoginError');
+      error.textContent = '';
+      const button = form.querySelector('button'); button.disabled = true; button.classList.add('is-loading');
+      try {
+        const response = await fetch('/api/admin/login', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Unable to sign in.');
+        location.href = '/admin';
+      } catch (e) { error.textContent = e.message; button.disabled = false; button.classList.remove('is-loading'); }
+    });
+  </script>
+</body>
+</html>

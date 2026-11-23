@@ -7,7 +7,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { createHash, timingSafeEqual, randomInt } = require('crypto');
+const { createHash, timingSafeEqual, randomInt, randomBytes } = require('crypto');
 const orderDiscount = require('./public/js/order-discount');
 const registerStoreManagement = require('./store-management');
 const Database = require('better-sqlite3');
@@ -20,15 +20,22 @@ const adminPassword = process.env.ADMIN_PASSWORD;
 const adminUser = process.env.ADMIN_USER || 'admin';
 const digest = (value) => createHash('sha256').update(value).digest();
 const credentials = adminPassword && digest(adminUser + ':' + adminPassword);
+const adminSessions = new Map();
+
+function readCookie(req, name) {
+  const cookies = String(req.get('Cookie') || '').split(';');
+  const item = cookies.find((part) => part.trim().startsWith(name + '='));
+  return item ? decodeURIComponent(item.trim().slice(name.length + 1)) : '';
+}
 
 function requireAdmin(req, res, next) {
   res.set('Cache-Control', 'no-store');
+  if (req.path === '/login') return next();
   if (!credentials) return res.status(503).send('Set ADMIN_PASSWORD and restart the server to enable admin access.');
+  const session = readCookie(req, 'throne_admin');
   const match = /^Basic ([A-Za-z0-9+/=]+)$/i.exec(req.get('Authorization') || '');
-  if (!match || !timingSafeEqual(digest(Buffer.from(match[1], 'base64')), credentials)) {
-    res.set('WWW-Authenticate', 'Basic realm="Throne Fragrance Admin", charset="UTF-8"');
-    return res.status(401).send('Admin sign-in required.');
-  }
+  const validBasic = match && timingSafeEqual(digest(Buffer.from(match[1], 'base64')), credentials);
+  if (!adminSessions.has(session) && !validBasic) return res.status(401).json({ error: 'Admin sign-in required.' });
   if (!['GET', 'HEAD', 'OPTIONS'].includes(req.method) &&
       ['cross-site', 'same-site'].includes(req.get('Sec-Fetch-Site'))) {
     return res.status(403).json({ error: 'Use the admin panel to make this change.' });
@@ -36,9 +43,28 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-app.use(['/admin', '/admin.html', '/api/admin'], requireAdmin);
+app.use(['/api/admin'], requireAdmin);
 app.get(/^\/admin(?:\.html)?\/$/i, (req, res) => res.redirect('/admin'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.post('/api/admin/login', (req, res) => {
+  if (!credentials) return res.status(503).json({ error: 'ADMIN_PASSWORD is not configured on the server.' });
+  const user = String(req.body?.username || '');
+  const password = String(req.body?.password || '');
+  if (user !== adminUser || !timingSafeEqual(digest(user + ':' + password), credentials)) {
+    return res.status(401).json({ error: 'Incorrect username or password.' });
+  }
+  const token = randomBytes(32).toString('hex');
+  adminSessions.set(token, Date.now() + 1000 * 60 * 60 * 24 * 7);
+  res.set('Set-Cookie', `throne_admin=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800`);
+  res.json({ ok: true });
+});
+
+app.post('/api/admin/logout', requireAdmin, (req, res) => {
+  adminSessions.delete(readCookie(req, 'throne_admin'));
+  res.set('Set-Cookie', 'throne_admin=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0');
+  res.json({ ok: true });
+});
 
 // ---------- Database ----------
 const dataDir = process.env.THRONE_DATA_DIR || path.join(__dirname, 'data');
@@ -473,7 +499,11 @@ app.delete('/api/admin/accounts/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-app.get(['/admin', '/admin.html'], (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
+app.get(['/admin', '/admin.html'], (req, res) => {
+  const token = readCookie(req, 'throne_admin');
+  if (adminSessions.has(token) || req.get('Authorization')) return res.sendFile(path.join(__dirname, 'admin.html'));
+  res.sendFile(path.join(__dirname, 'public', 'admin-login.html'));
+});
 
 app.use((error, req, res, next) => {
   if (res.headersSent) return next(error);
