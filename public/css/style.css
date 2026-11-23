@@ -275,6 +275,13 @@ body:has(.drawer[open]) { overflow: hidden; }
 .stat b { color: var(--forest); margin-top: 5px; }
 .admin-tabs { border-bottom: 1px solid var(--line2); padding-bottom: 12px; }
 .admin-tabs .btn { transition: none; }
+.product-edit { margin: 8px 0; min-width: 280px; }
+.product-edit summary { cursor: pointer; color: var(--forest); font-weight: 700; font-size: .82rem; }
+.product-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; padding: 12px; background: var(--surface); border: 1px solid var(--line); }
+.product-edit-grid label { display: grid; gap: 4px; font-size: .72rem; font-weight: 700; color: var(--muted); }
+.product-edit-grid .wide { grid-column: 1 / -1; }
+.product-edit-grid input, .product-edit-grid textarea { width: 100%; padding: 8px; border: 1px solid var(--line2); background: #fff; font: inherit; }
+.product-edit-grid textarea { min-height: 58px; resize: vertical; }
 .table-scroll { overflow-x: auto; }
 .table-scroll table { min-width: 530px; }
 .table-scroll th { background: #f1f2ee; font-size: .8125rem; }

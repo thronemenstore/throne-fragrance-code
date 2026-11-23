@@ -50,7 +50,11 @@ function render() {
         <td><input type="number" id="price-${p.id}" value="${p.price}" style="width:110px"></td>
         <td><input type="number" id="stock-${p.id}" value="${p.stock ?? ''}" placeholder="—" style="width:80px"></td>
         <td><input type="checkbox" id="live-${p.id}" ${p.is_live ? 'checked' : ''}></td>
-        <td><button class="btn gold small" onclick="saveProduct(${p.id})">Save</button></td>
+        <td><details class="product-edit"><summary>Edit all</summary><div class="product-edit-grid">
+          <label>Name<input id="name-${p.id}" value="${esc(p.name)}"></label><label>Family<input id="family-${p.id}" value="${esc(p.family)}"></label>
+          <label>Notes<input id="notes-${p.id}" value="${esc(p.notes)}"></label><label>Image key<input id="image-${p.id}" value="${esc(p.image_key)}"></label>
+          <label class="wide">Short blurb<input id="blurb-${p.id}" value="${esc(p.blurb)}"></label><label class="wide">Description<textarea id="description-${p.id}">${esc(p.description)}</textarea></label>
+        </div></details><button class="btn gold small" onclick="saveProduct(${p.id})">Save</button></td>
       </tr>`).join('')}</table></div></div>`;
   } else if (tab === 'orders') {
     const filters = [['all', 'All orders'], ...orderStatuses.map((status) => [status, status[0].toUpperCase() + status.slice(1)])];
@@ -350,8 +354,9 @@ window.saveProduct = async (id) => {
   const price = Number(document.getElementById('price-' + id).value);
   const stockVal = document.getElementById('stock-' + id).value;
   const isLive = document.getElementById('live-' + id).checked;
+  const value = (name) => document.getElementById(name + '-' + id)?.value || '';
   const r = await fetch('/api/admin/products/' + id, { method: 'PUT', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ price, stock: stockVal === '' ? null : Number(stockVal), is_live: isLive }) });
+    body: JSON.stringify({ name:value('name'), family:value('family'), notes:value('notes'), image_key:value('image'), blurb:value('blurb'), description:value('description'), price, stock: stockVal === '' ? null : Number(stockVal), is_live: isLive }) });
   if (r.ok) { alert('Saved — the storefront now shows the new price. Refresh the store tab to see it.'); load(); }
   else alert('Save failed');
 };
