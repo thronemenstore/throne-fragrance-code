@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "cf:dev": "wrangler dev",
-    "cf:migrate:local": "wrangler d1 migrations apply throne-fragrance-db --local",
+    "cf:migrate:local": "wrangler d1 migrations apply throne-fragrance-db --local -y",
     "cf:migrate:remote": "wrangler d1 migrations apply throne-fragrance-db --remote",
     "cf:deploy": "wrangler deploy"
   },
