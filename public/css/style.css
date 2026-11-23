@@ -247,7 +247,6 @@ body:has(.drawer[open]) { overflow: hidden; }
 .admin-login-card label { display: block; margin: 18px 0; color: var(--forest); font-weight: 700; font-size: .86rem; }
 .admin-login-card input { width: 100%; margin-top: 8px; padding: 15px 16px; border: 1px solid #d9d5ca; border-radius: 9px; background: #fff; color: var(--ink); font: inherit; transition: border-color .2s, box-shadow .2s; }
 .admin-login-card input:focus { border-color: var(--brass); box-shadow: 0 0 0 4px rgba(190,145,42,.13); }
-.admin-login-card input:focus { outline: 2px solid var(--brass); outline-offset: 2px; }
 .admin-login-submit { width: 100%; justify-content: space-between; margin-top: 12px; padding: 15px 18px; }
 .admin-login-submit span { font-size: 1.3rem; }
 .admin-login-submit.is-loading { opacity: .7; }
