@@ -1,0 +1,4 @@
+ADMIN_USER=admin
+ADMIN_PASSWORD=replace-with-a-long-password
+POSTEX_TOKEN=replace-with-postex-token
+POSTEX_PICKUP_ADDRESS_CODE=optional-code

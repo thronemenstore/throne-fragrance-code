@@ -1,5 +1,7 @@
 # THRONE FRAGRANCE — coding files
 node_modules/
 data/
+\.wrangler/
+.dev.vars
 *.log
 .DS_Store

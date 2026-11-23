@@ -7,7 +7,14 @@
   "main": "server.js",
   "name": "throne-fragrance",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "cf:dev": "wrangler dev",
+    "cf:migrate:local": "wrangler d1 migrations apply throne-fragrance-db --local",
+    "cf:migrate:remote": "wrangler d1 migrations apply throne-fragrance-db --remote",
+    "cf:deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
   },
   "version": "1.0.0"
 }
