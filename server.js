@@ -31,7 +31,7 @@ function readCookie(req, name) {
 
 function requireAdmin(req, res, next) {
   res.set('Cache-Control', 'no-store');
-  if (req.path === '/login') return next();
+  if (req.path === '/login' || req.path === '/logout') return next();
   if (!credentials) return res.status(503).send('Set ADMIN_PASSWORD and restart the server to enable admin access.');
   const session = readCookie(req, 'throne_admin');
   const expiry = adminSessions.get(session);
@@ -73,6 +73,7 @@ app.post('/api/admin/login', (req, res) => {
 app.post('/api/admin/logout', requireAdmin, (req, res) => {
   adminSessions.delete(readCookie(req, 'throne_admin'));
   res.set('Set-Cookie', 'throne_admin=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0');
+  res.set('Clear-Site-Data', '"cookies"');
   res.json({ ok: true });
 });
 

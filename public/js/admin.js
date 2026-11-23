@@ -8,7 +8,13 @@ const $ = (s) => document.querySelector(s);
 document.getElementById('adminLogout')?.addEventListener('click', async () => {
   const button = document.getElementById('adminLogout');
   button.disabled = true;
-  try { await fetch('/api/admin/logout', { method: 'POST' }); } finally { location.href = '/admin'; }
+  try {
+    await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
+  } finally {
+    // Remove the client-visible cookie as a fallback, then force a fresh login page.
+    document.cookie = 'throne_admin=; Max-Age=0; Path=/';
+    location.replace('/admin?logged-out=' + Date.now());
+  }
 });
 const money = (n) => 'Rs. ' + Number(n || 0).toLocaleString('en-PK');
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
