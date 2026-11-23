@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Shop signature 50 ml Eau de Parfums from Throne Fragrance. Explore Glory, Midnight Crown and Velora, with delivery across Pakistan.">
+<meta name="theme-color" content="#172b24">
+<title>THRONE FRAGRANCE — Rule Your Scent</title>
+<link rel="icon" type="image/webp" href="/images/throne-logo-mark.webp">
+<link rel="preload" as="image" href="/images/glory.webp" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="storefront">
+<a class="skip-link" href="#view">Skip to content</a>
+<div class="announce">
+  <div class="announcement-scroll">
+    <div class="announcement-track">
+      <span id="announcement">Complimentary shipping on orders over Rs. 5,000 · Cash on delivery available · Authentic parfum, sealed</span>
+      <span id="announcementRepeat" aria-hidden="true">Complimentary shipping on orders over Rs. 5,000 · Cash on delivery available · Authentic parfum, sealed</span>
+    </div>
+  </div>
+</div>
+<header class="site">
+  <div class="wrap">
+    <div class="head-grid">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation menu" aria-controls="mobileMenu" aria-haspopup="dialog" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+      <div class="head-left">
+        <a class="brand" href="#/">
+          <span class="mark"><img src="/images/throne-logo-mark.webp" width="32" height="26" alt=""></span><span class="brand-name">THRONE<span>FRAGRANCE</span></span>
+        </a>
+      </div>
+      <nav class="main head-nav" id="siteNav" aria-label="Main navigation">
+        <a href="#/collection" data-nav>Collection</a>
+        <a href="#/offers" data-nav>Offers</a>
+        <a href="#/finder" data-nav>Scent Finder</a>
+        <a href="#/story" data-nav>Our Story</a>
+        <a href="#/track" data-nav>Track Order</a>
+        <a href="#/faq" data-nav>FAQ</a>
+      </nav>
+      <div class="head-right">
+        <button class="btn bag-toggle" id="bagBtn" aria-haspopup="dialog" type="button">Bag <span id="bagCount">0</span></button>
+      </div>
+    </div>
+  </div>
+</header>
+<dialog class="mobile-menu" id="mobileMenu" aria-label="Navigation menu">
+  <button class="mobile-menu-close" id="mobileMenuClose" type="button" aria-label="Close navigation menu" autofocus>×</button>
+  <nav id="mobileNav" aria-label="Mobile navigation"></nav>
+</dialog>
+
+<main class="wrap" id="view" tabindex="-1"><p class="store-message" role="status">Loading the collection…</p></main>
+<noscript><p class="wrap">Enable JavaScript to browse and order from Throne Fragrance.</p></noscript>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="footer-brand" href="#/"><img src="/images/throne-logo.webp" width="112" height="107" loading="lazy" alt="Throne Fragrance — Rule Your Scent"></a>
+        <p>Eau De Parfum 50ml · Gift bag included</p>
+        <p style="margin-top:8px">WhatsApp: <a id="waLink" href="https://wa.me/923020682098" target="_blank" rel="noopener">03020682098</a><br>
+        Instagram: <a id="igLink" href="https://www.instagram.com/thronefragrance2235" target="_blank" rel="noopener">@thronefragrance2235</a></p>
+      </div>
+      <div>
+        <h4>SHOP</h4>
+        <a href="#/collection">Collection</a>
+        <a href="#/offers">Offers / Bundle &amp; Save</a>
+        <a href="#/finder">Scent Finder</a>
+        <a href="#/track">Track Order</a>
+      </div>
+      <div>
+        <h4>HELP</h4>
+        <a href="#/faq">FAQ</a>
+        <a href="#/contact">Contact Us</a>
+        <a href="#/policies/return">Return &amp; Refund Policy</a>
+        <a href="#/policies/privacy">Privacy Policy</a>
+        <button class="footer-preference" id="marketingPreference" type="button" hidden>Marketing cookies</button>
+        <a href="#/policies/terms">Terms &amp; Conditions</a>
+      </div>
+      <div>
+        <h4>TRUST</h4>
+        <p>Cash on Delivery available across Pakistan · 7-Day Easy Returns · 100% Original &amp; Sealed · Free shipping over Rs. 5,000</p>
+        <p style="margin-top:8px"><a href="/admin">Admin Panel</a></p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Bag drawer -->
+<dialog class="drawer" id="drawer" aria-labelledby="bagTitle">
+  <div class="drawer-head"><h2 id="bagTitle">Your bag</h2><button class="icon-btn" id="closeDrawer" type="button" aria-label="Close shopping bag" autofocus>×</button></div>
+  <div id="bagItems"></div>
+  <div id="bagSummary" aria-live="polite"></div>
+  <div style="display:flex;gap:10px;margin-top:16px">
+    <input id="promoInput" aria-label="Promo code" placeholder="Promo code" style="flex:1;min-width:0">
+    <button class="btn small" id="promoBtn" type="button">Apply</button>
+  </div>
+  <p class="muted" id="promoStatus" role="status"></p>
+  <div style="display:flex;gap:10px;margin-top:16px">
+    <button class="btn gold" id="checkoutBtn" type="button" style="flex:1">Checkout</button>
+  </div>
+  <p class="muted" style="margin-top:12px">Or order on WhatsApp: <a href="https://wa.me/923020682098" target="_blank" rel="noopener">03020682098</a></p>
+</dialog>
+
+<script src="/js/order-discount.js"></script>
+<script src="/js/meta-pixel.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>

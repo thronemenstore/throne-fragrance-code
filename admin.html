@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — THRONE FRAGRANCE</title>
+<link rel="icon" type="image/webp" href="/images/throne-logo-mark.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="admin-page">
+<header class="admin-header"><div class="wrap head-row"><a class="brand" href="/"><span class="mark"><img src="/images/throne-logo-mark.webp" width="32" height="26" alt=""></span><span class="brand-name">THRONE<span>FRAGRANCE</span></span></a><a class="btn" href="/">View storefront</a></div></header>
+<main class="wrap admin-main">
+  <h1>Store dashboard</h1>
+  <div class="stat-grid" id="stats"></div>
+  <nav class="admin-tabs" aria-label="Store management">
+    <button class="btn gold small" data-tab="products">Products</button>
+    <button class="btn small" data-tab="orders">Orders</button>
+    <button class="btn small" data-tab="shipping">Shipping</button>
+    <button class="btn small" data-tab="accounts">Payment Accounts</button>
+    <button class="btn small" data-tab="discounts">Discounts &amp; Offers</button>
+    <button class="btn small" data-tab="customers">Customers</button>
+    <button class="btn small" data-tab="reviews">Reviews</button>
+    <button class="btn small" data-tab="integrations">Integrations</button>
+    <button class="btn small" data-tab="settings">Settings</button>
+  </nav>
+  <div id="adminView"><p role="status">Loading store data…</p></div>
+</main>
+<script src="/js/admin.js"></script>
+</body>
+</html>
