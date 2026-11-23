@@ -22,7 +22,7 @@
     <h2>Sign in securely</h2>
     <form id="adminLoginForm">
       <label>Username<input name="username" autocomplete="username" value="admin" required></label>
-      <label>Password<input name="password" type="password" autocomplete="current-password" required autofocus></label>
+      <label>Password<span class="password-field"><input name="password" type="password" autocomplete="current-password" required autofocus><button type="button" class="password-toggle" aria-label="Show password">◉</button></span></label>
       <p id="adminLoginError" class="admin-login-error" role="alert"></p>
       <button class="btn btn-primary admin-login-submit" type="submit">Sign in to dashboard</button>
     </form>
@@ -30,6 +30,7 @@
     </section>
   </main>
   <script>
+    document.querySelectorAll('.password-toggle').forEach((button) => button.addEventListener('click', () => { const input = button.parentElement.querySelector('input'); const visible = input.type === 'text'; input.type = visible ? 'password' : 'text'; button.textContent = visible ? '◉' : '◌'; button.setAttribute('aria-label', visible ? 'Show password' : 'Hide password'); }));
     document.getElementById('adminLoginForm').addEventListener('submit', async (event) => {
       event.preventDefault();
       const form = event.currentTarget, error = document.getElementById('adminLoginError');
