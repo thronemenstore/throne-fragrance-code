@@ -1,17 +1,17 @@
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
-    if (url.pathname === '/api/store' || url.pathname === '/api/products') {
-      const products = await env.DB.prepare('SELECT * FROM products WHERE is_live = 1 ORDER BY sort_order, id').all();
-      const settings = await env.DB.prepare('SELECT key, value FROM settings').all();
-      return Response.json({ products: products.results, settings: Object.fromEntries(settings.results.map((r) => [r.key, r.value])) });
-    }
-    const reviewMatch = url.pathname.match(/^\/api\/reviews\/([^/]+)$/);
-    if (request.method === 'GET' && reviewMatch) {
-      const reviews = await env.DB.prepare("SELECT display_name, rating, comment, created_at FROM reviews WHERE product_slug = ? AND status = 'approved' ORDER BY id DESC LIMIT 100").bind(decodeURIComponent(reviewMatch[1])).all();
-      return Response.json(reviews.results);
-    }
-    if (url.pathname === '/api/health') return Response.json({ ok: true, runtime: 'cloudflare-workers', database: 'D1' });
-    return env.ASSETS.fetch(request);
-  }
-};
+const enc = new TextEncoder();
+const cookieName = 'throne_cf_admin';
+async function signature(value, secret) { const key = await crypto.subtle.importKey('raw', enc.encode(secret), {name:'HMAC',hash:'SHA-256'}, false, ['sign']); const bytes = new Uint8Array(await crypto.subtle.sign('HMAC', key, enc.encode(value))); return btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function cookie(request) { return (request.headers.get('Cookie')||'').split(';').map(x=>x.trim()).find(x=>x.startsWith(cookieName+'='))?.slice(cookieName.length+1)||''; }
+async function isAdmin(request, env) { const [user,exp,sig]=cookie(request).split('.'); return Boolean(user&&exp&&sig&&Number(exp)>Date.now()&&user===(env.ADMIN_USER||'admin')&&sig===await signature(`${user}.${exp}`,env.ADMIN_PASSWORD||'')); }
+const json=(data,init={})=>Response.json(data,{headers:{'Cache-Control':'no-store',...(init.headers||{})},...init});
+export default { async fetch(request,env) {
+  const url=new URL(request.url);
+  if(url.pathname==='/api/admin/login'&&request.method==='POST'){const b=await request.json().catch(()=>({}));if(String(b.username||'')!==(env.ADMIN_USER||'admin')||String(b.password||'')!==String(env.ADMIN_PASSWORD||''))return json({error:'Incorrect username or password.'},{status:401});const exp=Date.now()+604800000,v=`${env.ADMIN_USER||'admin'}.${exp}`,s=await signature(v,env.ADMIN_PASSWORD||'');return json({ok:true},{headers:{'Set-Cookie':`${cookieName}=${v}.${s}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800${url.protocol==='https:'?'; Secure':''}`}});}
+  if(url.pathname==='/api/admin/logout'&&request.method==='POST')return json({ok:true},{headers:{'Set-Cookie':`${cookieName}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`}});
+  if(url.pathname==='/api/admin'||url.pathname.startsWith('/api/admin/')){if(!(await isAdmin(request,env)))return json({error:'Admin sign-in required.'},{status:401});if(url.pathname==='/api/admin'){const [p,s,sh,a,o]=await Promise.all([env.DB.prepare('SELECT * FROM products ORDER BY sort_order,id').all(),env.DB.prepare('SELECT key,value FROM settings').all(),env.DB.prepare('SELECT * FROM shipping_methods ORDER BY sort_order,id').all(),env.DB.prepare('SELECT * FROM payment_accounts ORDER BY sort_order,id').all(),env.DB.prepare('SELECT * FROM orders ORDER BY id DESC').all()]);return json({products:p.results,settings:Object.fromEntries(s.results.map(r=>[r.key,r.value])),shippingMethods:sh.results,paymentAccounts:a.results,orders:o.results,reviews:[],postexConfigured:Boolean(env.POSTEX_TOKEN)});}const m=url.pathname.match(/^\/api\/admin\/products\/(\d+)$/);if(m&&request.method==='PUT'){const b=await request.json();await env.DB.prepare('UPDATE products SET price=?,stock=?,is_live=? WHERE id=?').bind(Number(b.price),b.stock==null?null:Number(b.stock),b.is_live?1:0,Number(m[1])).run();return json({ok:true});}if(url.pathname==='/api/admin/settings'&&request.method==='POST'){const b=await request.json(),st=env.DB.prepare('INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value');for(const [k,v] of Object.entries(b))await st.bind(k,String(v)).run();return json({ok:true});}return json({error:'Not found'},{status:404});}
+  if(url.pathname==='/api/store'||url.pathname==='/api/products'){const [p,s]=await Promise.all([env.DB.prepare('SELECT * FROM products WHERE is_live=1 ORDER BY sort_order,id').all(),env.DB.prepare('SELECT key,value FROM settings').all()]);return json({products:p.results,settings:Object.fromEntries(s.results.map(r=>[r.key,r.value]))});}
+  const rm=url.pathname.match(/^\/api\/reviews\/([^/]+)$/);if(request.method==='GET'&&rm){const r=await env.DB.prepare("SELECT display_name,rating,comment,created_at FROM reviews WHERE product_slug=? AND status='approved' ORDER BY id DESC LIMIT 100").bind(decodeURIComponent(rm[1])).all();return json(r.results);}
+  if(url.pathname==='/api/health')return json({ok:true,runtime:'cloudflare-workers',database:'D1'});
+  if(url.pathname==='/admin'||url.pathname==='/admin.html'){if(!(await isAdmin(request,env)))return env.ASSETS.fetch(new Request(new URL('/admin-login.html',url)));}
+  return env.ASSETS.fetch(request);
+} };
