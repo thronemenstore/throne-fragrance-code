@@ -54,7 +54,7 @@ function render() {
           <label>Name<input id="name-${p.id}" value="${esc(p.name)}"></label><label>Family<input id="family-${p.id}" value="${esc(p.family)}"></label>
           <label>Notes<input id="notes-${p.id}" value="${esc(p.notes)}"></label><label>Image key<input id="image-${p.id}" value="${esc(p.image_key)}"></label>
           <label class="wide">Short blurb<input id="blurb-${p.id}" value="${esc(p.blurb)}"></label><label class="wide">Description<textarea id="description-${p.id}">${esc(p.description)}</textarea></label>
-        </div><div class="product-edit-actions"><button class="btn" type="button" onclick="this.closest('details').removeAttribute('open')">Cancel</button><button class="btn gold" type="button" onclick="saveProduct(${p.id})">Save changes</button></div></details></td>
+        <div class="product-edit-actions"><button class="btn" type="button" onclick="this.closest('details').removeAttribute('open')">Cancel</button><button class="btn gold" type="button" onclick="saveProduct(${p.id})">Save changes</button></div></div></details></td>
       </tr>`).join('')}</table></div></div>`;
   } else if (tab === 'orders') {
     const filters = [['all', 'All orders'], ...orderStatuses.map((status) => [status, status[0].toUpperCase() + status.slice(1)])];
