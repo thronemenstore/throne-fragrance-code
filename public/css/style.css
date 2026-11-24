@@ -323,7 +323,8 @@ body:has(.drawer[open]) { overflow: hidden; }
   .card-actions .btn { width: 100%; }
   .scent-grid, .story { grid-template-columns: 1fr; }
   .service-strip { font-size: .8125rem; padding-block: 12px; }
-  .toolbar select { flex: 1; min-width: 0; }
+  .toolbar { display: grid; grid-template-columns: minmax(0, 1fr) 84px 84px; gap: 8px; }
+  .toolbar input, .toolbar select { min-width: 0; width: 100%; }
   .admin-tabs { gap: 6px; }
   .table-scroll { overflow: visible; }
   .table-scroll table, .table-scroll tbody { display: block; min-width: 0; }
