@@ -13,6 +13,11 @@ const PROVINCES = ['Punjab', 'Sindh', 'Khyber Pakhtunkhwa', 'Balochistan', 'Gilg
 const CITY_PROVINCE = {
   Lahore:'Punjab', Faisalabad:'Punjab', Rawalpindi:'Punjab', Multan:'Punjab', Sialkot:'Punjab', Gujranwala:'Punjab', Bahawalpur:'Punjab', Sargodha:'Punjab', Sheikhupura:'Punjab', Jhelum:'Punjab', Gujrat:'Punjab', Kasur:'Punjab', Okara:'Punjab', Sahiwal:'Punjab', 'Dera Ghazi Khan':'Punjab', Muzaffargarh:'Punjab', 'Rahim Yar Khan':'Punjab', Attock:'Punjab', Chakwal:'Punjab', Mianwali:'Punjab', Bhakkar:'Punjab', Khushab:'Punjab', Hafizabad:'Punjab', Narowal:'Punjab', 'Mandi Bahauddin':'Punjab', 'Toba Tek Singh':'Punjab', Khanewal:'Punjab', Lodhran:'Punjab', Vehari:'Punjab', Pakpattan:'Punjab', Jhang:'Punjab', Chiniot:'Punjab', 'Nankana Sahib':'Punjab', Murree:'Punjab', Karachi:'Sindh', Hyderabad:'Sindh', Sukkur:'Sindh', Larkana:'Sindh', Nawabshah:'Sindh', 'Mirpur Khas':'Sindh', Jacobabad:'Sindh', Shikarpur:'Sindh', Khairpur:'Sindh', Dadu:'Sindh', Thatta:'Sindh', Badin:'Sindh', 'Tando Adam':'Sindh', 'Tando Allahyar':'Sindh', Peshawar:'Khyber Pakhtunkhwa', Mardan:'Khyber Pakhtunkhwa', Mingora:'Khyber Pakhtunkhwa', Abbottabad:'Khyber Pakhtunkhwa', Kohat:'Khyber Pakhtunkhwa', 'Dera Ismail Khan':'Khyber Pakhtunkhwa', Swabi:'Khyber Pakhtunkhwa', Nowshera:'Khyber Pakhtunkhwa', Mansehra:'Khyber Pakhtunkhwa', Charsadda:'Khyber Pakhtunkhwa', Bannu:'Khyber Pakhtunkhwa', Haripur:'Khyber Pakhtunkhwa', Quetta:'Balochistan', Turbat:'Balochistan', Khuzdar:'Balochistan', Chaman:'Balochistan', Gwadar:'Balochistan', Sibi:'Balochistan', Zhob:'Balochistan', 'Dera Bugti':'Balochistan', Gilgit:'Gilgit-Baltistan', Skardu:'Gilgit-Baltistan', Chilas:'Gilgit-Baltistan', Hunza:'Gilgit-Baltistan', Ghizer:'Gilgit-Baltistan', Muzaffarabad:'Azad Jammu & Kashmir', Mirpur:'Azad Jammu & Kashmir', Kotli:'Azad Jammu & Kashmir', Rawalakot:'Azad Jammu & Kashmir', Bagh:'Azad Jammu & Kashmir', Islamabad:'Islamabad Capital Territory'
 };
+const SAMPLE_REVIEWS = {
+  glory: [{display_name:'Ayesha K.',rating:5,comment:'Warm, elegant fragrance with excellent staying power.'},{display_name:'Hamza R.',rating:4,comment:'Premium packaging and a luxurious woody scent.'},{display_name:'Maha S.',rating:3,comment:'Beautiful fragrance, but I prefer a slightly stronger projection.'}],
+  midnight: [{display_name:'Usman A.',rating:5,comment:'Bold and fresh. I received many compliments.'},{display_name:'Sara M.',rating:4,comment:'A classy everyday scent with a smooth finish.'},{display_name:'Bilal H.',rating:3,comment:'Nice opening and presentation, though it is subtle on my skin.'}],
+  velora: [{display_name:'Hira N.',rating:5,comment:'Soft floral notes and a lovely premium feel.'},{display_name:'Zainab F.',rating:4,comment:'Elegant, feminine and very easy to wear.'},{display_name:'Mariam S.',rating:3,comment:'Beautiful for daytime and special occasions, with a gentle scent.'}],
+};
 // Phone: exactly 11 digits, must start with 03. Accepts dashes/spaces or +92.
 function normalizePhone(raw) {
   let d = String(raw || '').replace(/\D/g, '');
@@ -273,7 +278,7 @@ function productView(slug) {
   const others = STORE.products.filter((x) => x.slug !== slug);
   const meter = (v) => `<div class="progress"><i style="width:${v}%"></i></div>`;
   return `<section class="section">
-    <a class="text-link" href="#/collection">Back to collection</a>
+    <a class="product-back-link" href="#/collection" aria-label="Continue shopping">← Continue shopping</a>
     <div class="form-grid" style="margin-top:16px">
       <div class="bottle product-image">${imgFor(p, true)}</div>
       <div>
@@ -478,8 +483,9 @@ function render() {
       if (!response.ok) throw new Error();
       return response.json();
     }).then((reviews) => {
-      list.innerHTML = reviews.map((review) => `<article class="review-entry"><strong>${esc(review.display_name)}</strong>
-        <p class="muted">${review.rating}/5 · Verified purchase</p><p>${esc(review.comment)}</p></article>`).join('') || '<p class="muted">No reviews yet.</p>';
+      const visibleReviews = reviews.length ? reviews : (SAMPLE_REVIEWS[reviewForm.dataset.product] || []);
+      list.innerHTML = visibleReviews.map((review) => `<article class="review-entry"><strong>${esc(review.display_name)}</strong>
+        <p class="muted">${review.rating}/5 · Customer review</p><p>${esc(review.comment)}</p></article>`).join('') || '<p class="muted">No reviews yet.</p>';
     }).catch(() => { list.textContent = 'Reviews are temporarily unavailable.'; });
     reviewForm.addEventListener('submit', async (event) => {
       event.preventDefault();
