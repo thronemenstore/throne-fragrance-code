@@ -30,6 +30,8 @@ nav.main a:hover { border-bottom-color: #171717; }
 .bottle img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .price { color: #171717; font-weight: 800; font-size: 18px; margin: 6px 0; }
 .muted { color: var(--muted); font-size: 13px; }
+.delivery-note { margin: 12px 0; padding: 11px 12px; border-left: 3px solid var(--gold); background: #f8f3e7; color: var(--ink); font-size: .82rem; line-height: 1.45; }
+.delivery-note span { color: var(--muted); }
 .section { padding: 34px 0; }
 .section h2 { letter-spacing: .12em; font-size: 22px; margin-bottom: 6px; }
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 20px; }

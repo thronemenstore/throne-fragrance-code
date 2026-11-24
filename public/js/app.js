@@ -118,6 +118,7 @@ function renderBag() {
   const left = Math.max(0, threshold - (sub - disc));
   const pct = Math.min(100, Math.round((sub - disc) / threshold * 100));
   document.getElementById('bagSummary').innerHTML = `
+    <div class="delivery-note" role="note"><strong>Delivery charges advance lazmi hain.</strong><br><span>Product payment COD ho sakti hai, lekin delivery charges order confirm karne ke liye advance pay karne honge.</span></div>
     <div class="progress"><i style="width:${pct}%"></i></div>
     <p class="muted">${left > 0 ? 'Add ' + money(left) + ' more for free shipping' : '🎉 Free shipping unlocked!'}</p>
     <p style="margin-top:10px">Subtotal: <strong>${money(sub)}</strong>${disc ? `<br>Discount: <strong style="color:var(--gold)">− ${money(disc)}</strong>` : ''}</p>`;
@@ -425,7 +426,7 @@ function checkoutView() {
           ${checkout.payment === 'bank' ? bankDetails() : ''}
         </div>
       </div>
-      <div class="panel-box checkout-summary"><h3>Order summary</h3>
+      <div class="panel-box checkout-summary"><h3>Order summary</h3><div class="delivery-note" role="note"><strong>Delivery charges advance lazmi hain.</strong><br><span>COD sirf product amount ke liye available hai.</span></div>
         ${lines.map((l) => `<div class="bag-item"><span>${esc(l.name)} × ${l.qty}</span><strong>${money(l.price * l.qty)}</strong></div>`).join('')}
         <p style="margin-top:10px">Subtotal: <strong>${money(sub)}</strong></p>
         ${disc ? `<p>Discount: <strong style="color:var(--gold)">− ${money(disc)}</strong></p>` : ''}
