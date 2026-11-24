@@ -391,7 +391,10 @@ function checkoutView() {
   const after = sub - disc;
   const fee = ship && ship.free_over != null && after >= ship.free_over ? 0 : (ship ? ship.fee : 300);
   const total = after + fee;
-  const cities = (STORE.settings.cities || 'Lahore, Karachi, Islamabad, Other').split(',').map((c) => c.trim());
+  // Keep the admin-configured list when present, but always include the
+  // complete Pakistan city list so checkout never falls back to only 3 cities.
+  const configuredCities = (STORE.settings.cities || '').split(',').map((c) => c.trim()).filter(Boolean);
+  const cities = [...new Set([...Object.keys(CITY_PROVINCE), ...configuredCities, 'Other'])];
   const accounts = STORE.paymentAccounts.filter((a) => a.type === 'jazzcash' || a.type === 'easypaisa');
   window._cities = cities;
   window._province = '';
@@ -406,7 +409,7 @@ function checkoutView() {
           <div class="field"><label for="phoneInput">Phone (WhatsApp) *</label><input name="phone" id="phoneInput" autocomplete="tel-national" aria-describedby="phoneError" required placeholder="03xx-xxxxxxx" inputmode="tel" maxlength="12"><div class="field-error" id="phoneError">Phone number must be exactly 11 digits and start with 03 (e.g. 0302-0682098).</div></div>
           <div class="field"><label for="customerEmail">Email (optional)</label><input id="customerEmail" name="email" type="email" autocomplete="email"></div>
           <div class="field"><label for="provinceSelect">Province *</label><select name="province" id="provinceSelect" autocomplete="address-level1" aria-describedby="provinceError" required><option value="">Choose your province…</option>${PROVINCES.map((p) => `<option>${esc(p)}</option>`).join('')}</select><div class="field-error" id="provinceError">Please select your province.</div></div>
-          <div class="field"><label for="citySelect">City *</label><select name="city" id="citySelect" autocomplete="address-level2" required>${cities.map((c) => `<option>${esc(c)}</option>`).join('')}</select></div>
+          <div class="field"><label for="citySelect">City *</label><select name="city" id="citySelect" autocomplete="address-level2" required>${cities.map((c) => `<option>${esc(c)}</option>`).join('')}</select><input id="customCity" name="custom_city" autocomplete="address-level2" placeholder="Enter your city" hidden></div>
           <div class="field"><label for="customerArea">Area</label><input id="customerArea" name="area" autocomplete="address-level3"></div>
           <div class="field"><label for="customerAddress">Complete address *</label><textarea id="customerAddress" name="address" autocomplete="street-address" rows="2" required></textarea></div>
           <div class="field"><label for="orderNote">Order note (optional)</label><input id="orderNote" name="note"></div>
@@ -540,9 +543,13 @@ function render() {
       reorderCities(prov.value);
     });
     citySel.addEventListener('change', () => {
+      const customCity = document.getElementById('customCity');
+      const isOther = citySel.value === 'Other';
+      if (customCity) { customCity.hidden = !isOther; customCity.required = isOther; if (!isOther) customCity.value = ''; }
       const p = CITY_PROVINCE[citySel.value];
       if (p) { prov.value = p; window._province = p; reorderCities(p); }
     });
+    citySel.dispatchEvent(new Event('change'));
   }
   // Track order form
   const trackForm = document.getElementById('trackForm');
@@ -626,7 +633,9 @@ window.orderOnWhatsApp = () => {
   const after = sub - disc;
   const fee = ship && ship.free_over != null && after >= ship.free_over ? 0 : (ship ? ship.fee : 300);
   const province = document.getElementById('provinceSelect')?.value || '';
-  const city = document.getElementById('citySelect')?.value || '';
+  const city = document.getElementById('citySelect')?.value === 'Other'
+    ? (document.getElementById('customCity')?.value || '')
+    : (document.getElementById('citySelect')?.value || '');
   const text = `Hi Throne Fragrance, I want to order: ${lines.map((l) => l.name + ' x' + l.qty).join(', ')} — Total ${money(after + fee)} · Phone ${normalizePhone(phone)}${province ? ' · ' + province : ''}${city ? ', ' + city : ''}`;
   window.open('https://wa.me/923020682098?text=' + encodeURIComponent(text), '_blank');
 };
@@ -643,8 +652,10 @@ async function placeOrder(e) {
   }
   if (!province) { document.getElementById('provinceError')?.classList.add('show'); return; }
   const shipId = Number(document.querySelector('input[name="shipping"]:checked')?.value || checkout.shippingId || 1);
+  const city = fd.get('city') === 'Other' ? String(fd.get('custom_city') || '').trim() : String(fd.get('city') || '');
+  if (!city) { document.getElementById('customCity')?.focus(); return; }
   const payload = {
-    name: fd.get('name'), phone: normalizePhone(phone), email: fd.get('email'), province, city: fd.get('city'),
+    name: fd.get('name'), phone: normalizePhone(phone), email: fd.get('email'), province, city,
     area: fd.get('area'), address: fd.get('address'), note: fd.get('note'),
     items: bagLines().map((i) => ({ slug: i.slug, qty: i.qty })),
     promo, shipping_id: shipId, payment: checkout.payment,
