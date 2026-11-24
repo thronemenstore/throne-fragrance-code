@@ -93,6 +93,7 @@ function render() {
             <input type="file" accept="application/pdf,.pdf" data-label-order="${o.id}" hidden>
           ` : ''}
           <a class="text-link" href="https://merchant.postex.pk/login" target="_blank" rel="noopener">PostEx portal</a>
+          ${o.status === 'cancelled' ? `<button class="btn small danger" type="button" data-delete-order="${o.id}">Delete order</button>` : ''}
         </div></td>
       </tr>`).join('')}</table></div>` : ''}
       <p class="muted" id="orderFilterEmpty" role="status" hidden></p></div>
@@ -324,9 +325,9 @@ function render() {
     const ids = [...v.querySelectorAll('.postex-order-select:checked')].map((box) => Number(box.value));
     if (!ids.length) return alert('Select at least one unbooked order.');
     if (!confirm(`Book ${ids.length} order(s) with PostEx?`)) return;
-    e.currentTarget.disabled = true;
+    const button = e.currentTarget; button.disabled = true;
     const result = await saveManagement('/api/admin/postex/book', 'POST', { ids });
-    e.currentTarget.disabled = false;
+    button.disabled = false;
     if (result) { alert((result.results || []).map((r) => r.error ? `${r.ref || r.id}: ${r.error}` : `${r.ref}: ${r.tracking}`).join('\\n')); await load(); }
   });
   v.querySelectorAll('[data-edit-order]').forEach((button) => button.addEventListener('click', () => {
@@ -342,6 +343,14 @@ function render() {
     if (confirm('Have you checked the PostEx portal and confirmed that no shipment exists for this order reference?')) {
       saveManagement('/api/admin/shipments/' + button.dataset.resetBooking + '/reset-booking', 'POST', { checkedPortal: true }, true);
     }
+  }));
+  v.querySelectorAll('[data-delete-order]').forEach((button) => button.addEventListener('click', async () => {
+    const order = ADMIN.orders.find((item) => String(item.id) === button.dataset.deleteOrder);
+    if (!order || order.status !== 'cancelled') return;
+    if (!confirm(`Delete cancelled order ${order.ref}? This cannot be undone.`)) return;
+    button.disabled = true;
+    const result = await saveManagement('/api/admin/orders/' + order.id, 'DELETE', {}, false);
+    if (result?.ok) await load(); else button.disabled = false;
   }));
   v.querySelectorAll('[data-label-order]').forEach((input) => input.addEventListener('change', () => {
     const file = input.files[0];

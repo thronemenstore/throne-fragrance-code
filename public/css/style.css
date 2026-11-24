@@ -337,6 +337,8 @@ body:has(.drawer[open]) { overflow: hidden; }
 .orders-table .status-select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgb(190 143 45 / .16); transform: translateY(-1px); outline: none; }
 .orders-table .btn { min-height: 38px; font-size: .82rem; }
 .orders-table .muted { font-size: .82rem; }
+.orders-table .danger { color: #9d2f2f; border-color: #d9a7a7; margin-top: 8px; }
+.orders-table .danger:hover { background: #fff1f1; border-color: #9d2f2f; }
 @media (max-width: 900px) {
   .head-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 4px 10px; min-height: 62px; padding-block: 8px; }
   .head-left { grid-area: 1 / 2; justify-self: center; }
