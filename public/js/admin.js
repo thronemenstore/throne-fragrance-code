@@ -71,7 +71,7 @@ function render() {
       ${ADMIN.orders.map((o) => `<tr data-order-status="${esc(o.status)}">
         <td><input type="checkbox" class="postex-order-select" value="${o.id}" ${o.courier_tracking ? 'disabled' : ''} aria-label="Select ${esc(o.ref)} for PostEx booking"></td>
         <td><strong>${esc(o.ref)}</strong><br><span class="muted">${esc(o.created_at.slice(0, 10))}</span></td>
-        <td>${esc(o.customer_name)}<br><span class="muted">${esc(o.phone)}<br>${[o.address, o.area, o.city, o.province].filter(Boolean).map(esc).join(', ')}</span></td>
+        <td>${esc(o.customer_name)}<br><span class="muted">${esc(o.phone)}<br>${[o.address, o.area, o.city, o.province].filter(Boolean).map(esc).join(', ')}</span><br><button class="btn small" type="button" data-edit-order="${o.id}">Edit details</button></td>
         <td>${o.items.map((i) => esc(i.name) + ' × ' + i.qty).join('<br>')}</td>
         <td><strong>${money(o.total)}</strong><br><span class="muted">Advance ${money(o.advance_paid)} · Remaining ${money(o.total - o.advance_paid)}</span></td>
         <td>${esc(o.payment_method)}<br><span class="muted">${esc(o.shipping_method)}</span></td>
@@ -322,6 +322,13 @@ function render() {
     e.currentTarget.disabled = false;
     if (result) { alert((result.results || []).map((r) => r.error ? `${r.ref || r.id}: ${r.error}` : `${r.ref}: ${r.tracking}`).join('\\n')); await load(); }
   });
+  v.querySelectorAll('[data-edit-order]').forEach((button) => button.addEventListener('click', async () => {
+    const o = ADMIN.orders.find((item) => String(item.id) === button.dataset.editOrder); if (!o) return;
+    const value = (label, current) => { const next = prompt(label, current || ''); return next === null ? null : next.trim(); };
+    const fields = [['customer_name','Customer name'],['phone','Phone'],['email','Email'],['province','Province'],['city','City'],['area','Area'],['address','Complete address'],['note','Order note']]; const data = {};
+    for (const [key,label] of fields) { const next=value(label,o[key]); if (next===null) return; data[key]=next; }
+    await saveManagement('/api/admin/orders/' + o.id, 'PUT', data, true); await load();
+  }));
   v.querySelectorAll('[data-reset-booking]').forEach((button) => button.addEventListener('click', () => {
     if (confirm('Have you checked the PostEx portal and confirmed that no shipment exists for this order reference?')) {
       saveManagement('/api/admin/shipments/' + button.dataset.resetBooking + '/reset-booking', 'POST', { checkedPortal: true }, true);
