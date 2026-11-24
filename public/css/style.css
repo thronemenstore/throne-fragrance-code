@@ -156,6 +156,8 @@ nav.main a:hover, nav.main a[aria-current] { border-bottom-color: var(--gold); }
 #mobileNav a[aria-current] { color: var(--gold); }
 body:has(.mobile-menu[open]) { overflow: hidden; }
 @keyframes mobile-menu-enter { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes page-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+#view.page-enter { animation: page-enter .42s cubic-bezier(.22,.61,.36,1) both; }
 .bag-toggle span { display: inline-grid; place-items: center; min-width: 24px; height: 24px; margin-left: 4px; padding-inline: 4px; border-radius: 20px; background: var(--surface); }
 .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 0; margin-top: clamp(16px, 3vw, 40px); overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
 .hero-copy { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: clamp(26px, 5vw, 76px); }
@@ -349,8 +351,10 @@ body:has(.drawer[open]) { overflow: hidden; }
   .announcement-track { display: block; width: auto; animation: none; }
   .announcement-track span { min-width: 0; padding: 0; white-space: normal; }
   #announcementRepeat { display: none; }
-  .mobile-menu[open] { animation: none; }
-  *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; }
+  .mobile-menu[open] { animation: mobile-menu-enter .26s ease-out both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
 }
 /* Clean link treatment: rely on color/hover states instead of underlines. */
 a, a:hover, .text-link, footer a, .footer-preference, .footer-grid a { text-decoration: none !important; }

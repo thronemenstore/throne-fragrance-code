@@ -722,6 +722,10 @@ document.getElementById('promoBtn').addEventListener('click', () => {
 });
 function renderRoute() {
   render();
+  const view = document.getElementById('view');
+  view.classList.remove('page-enter');
+  void view.offsetWidth;
+  view.classList.add('page-enter');
   if (location.hash.startsWith('#/product/')) window.thronePixel.track('ViewContent');
   if (location.hash === '#/checkout' && bagLines().length) {
     window.thronePixel.track('InitiateCheckout', { currency: 'PKR', value: bagSubtotal() - bagDiscount() });
