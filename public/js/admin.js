@@ -66,8 +66,9 @@ function render() {
           ${label} <span>${status === 'all' ? ADMIN.orders.length : counts.get(status) || 0}</span>
         </button>`).join('')}
       </div>
-      ${ADMIN.orders.length ? `<div class="table-scroll" tabindex="0"><table><tr><th>Ref</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>PostEx</th><th>Slip</th></tr>
+      ${ADMIN.orders.length ? `<div class="bulk-actions"><label><input type="checkbox" id="selectAllPostex"> Select all</label><button class="btn gold small" type="button" id="bulkPostexBook">Book selected with PostEx</button></div><div class="table-scroll" tabindex="0"><table><tr><th>Select</th><th>Ref</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>PostEx</th><th>Slip</th></tr>
       ${ADMIN.orders.map((o) => `<tr data-order-status="${esc(o.status)}">
+        <td><input type="checkbox" class="postex-order-select" value="${o.id}" ${o.courier_tracking ? 'disabled' : ''} aria-label="Select ${esc(o.ref)} for PostEx booking"></td>
         <td><strong>${esc(o.ref)}</strong><br><span class="muted">${esc(o.created_at.slice(0, 10))}</span></td>
         <td>${esc(o.customer_name)}<br><span class="muted">${esc(o.phone)}<br>${[o.address, o.area, o.city, o.province].filter(Boolean).map(esc).join(', ')}</span></td>
         <td>${o.items.map((i) => esc(i.name) + ' × ' + i.qty).join('<br>')}</td>
@@ -310,6 +311,16 @@ function render() {
     }
     await load();
   }));
+  v.querySelector('#selectAllPostex')?.addEventListener('change', (e) => v.querySelectorAll('.postex-order-select:not(:disabled)').forEach((box) => { box.checked = e.target.checked; }));
+  v.querySelector('#bulkPostexBook')?.addEventListener('click', async (e) => {
+    const ids = [...v.querySelectorAll('.postex-order-select:checked')].map((box) => Number(box.value));
+    if (!ids.length) return alert('Select at least one unbooked order.');
+    if (!confirm(`Book ${ids.length} order(s) with PostEx?`)) return;
+    e.currentTarget.disabled = true;
+    const result = await saveManagement('/api/admin/postex/book', 'POST', { ids });
+    e.currentTarget.disabled = false;
+    if (result) { alert((result.results || []).map((r) => r.error ? `${r.ref || r.id}: ${r.error}` : `${r.ref}: ${r.tracking}`).join('\\n')); await load(); }
+  });
   v.querySelectorAll('[data-reset-booking]').forEach((button) => button.addEventListener('click', () => {
     if (confirm('Have you checked the PostEx portal and confirmed that no shipment exists for this order reference?')) {
       saveManagement('/api/admin/shipments/' + button.dataset.resetBooking + '/reset-booking', 'POST', { checkedPortal: true }, true);
