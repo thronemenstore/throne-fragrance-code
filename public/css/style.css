@@ -230,6 +230,12 @@ tr[hidden] { display: none !important; }
 .bulk-actions { display: flex; align-items: center; gap: 12px; margin: 14px 0 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fafaf7; }
 .bulk-actions label { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: .9rem; }
 .bulk-actions input { accent-color: var(--forest); }
+.admin-modal { width: min(680px, calc(100vw - 28px)); max-width: 680px; border: 0; padding: 0; background: transparent; }
+.admin-modal::backdrop { background: rgb(15 28 22 / .5); backdrop-filter: blur(3px); }
+.admin-modal > form { margin: 0; padding: 26px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: 0 24px 70px rgb(0 0 0 / .2); }
+.edit-order-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.edit-order-grid .wide { grid-column: 1 / -1; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 .shipment-form { display: grid; gap: 7px; min-width: 125px; }
 .shipment-form .btn { white-space: nowrap; }
 .form-grid > * { min-width: 0; }
@@ -338,6 +344,10 @@ body:has(.drawer[open]) { overflow: hidden; }
   .admin-tabs { gap: 6px; }
   .bulk-actions { align-items: stretch; flex-direction: column; gap: 9px; }
   .bulk-actions .btn { width: 100%; }
+  .edit-order-grid { grid-template-columns: 1fr; }
+  .edit-order-grid .wide { grid-column: auto; }
+  .modal-actions { flex-direction: column-reverse; }
+  .modal-actions .btn { width: 100%; }
   .table-scroll { overflow: visible; }
   .table-scroll table, .table-scroll tbody { display: block; min-width: 0; }
   .table-scroll tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; padding-block: 14px; border-bottom: 1px solid var(--line); }

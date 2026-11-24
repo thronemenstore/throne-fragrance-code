@@ -322,12 +322,14 @@ function render() {
     e.currentTarget.disabled = false;
     if (result) { alert((result.results || []).map((r) => r.error ? `${r.ref || r.id}: ${r.error}` : `${r.ref}: ${r.tracking}`).join('\\n')); await load(); }
   });
-  v.querySelectorAll('[data-edit-order]').forEach((button) => button.addEventListener('click', async () => {
+  v.querySelectorAll('[data-edit-order]').forEach((button) => button.addEventListener('click', () => {
     const o = ADMIN.orders.find((item) => String(item.id) === button.dataset.editOrder); if (!o) return;
-    const value = (label, current) => { const next = prompt(label, current || ''); return next === null ? null : next.trim(); };
-    const fields = [['customer_name','Customer name'],['phone','Phone'],['email','Email'],['province','Province'],['city','City'],['area','Area'],['address','Complete address'],['note','Order note']]; const data = {};
-    for (const [key,label] of fields) { const next=value(label,o[key]); if (next===null) return; data[key]=next; }
-    await saveManagement('/api/admin/orders/' + o.id, 'PUT', data, true); await load();
+    document.getElementById('orderEditDialog')?.remove();
+    const field = (key, label, value, type='text') => `<label class="field"><span>${label}</span><input name="${key}" type="${type}" value="${esc(value || '')}" required></label>`;
+    document.body.insertAdjacentHTML('beforeend', `<dialog id="orderEditDialog" class="admin-modal"><form method="dialog" class="panel-box"><h3>Edit customer details</h3><div class="edit-order-grid">${field('customer_name','Customer name',o.customer_name)}${field('phone','Phone',o.phone,'tel')}${field('email','Email',o.email,'email')}${field('province','Province',o.province)}${field('city','City',o.city)}${field('area','Area',o.area)}<label class="field wide"><span>Complete address</span><textarea name="address" required>${esc(o.address || '')}</textarea></label><label class="field wide"><span>Order note</span><textarea name="note">${esc(o.note || '')}</textarea></label></div><div class="modal-actions"><button type="button" class="btn" data-close-order-edit>Cancel</button><button class="btn gold" type="submit">Save &amp; confirm</button></div></form></dialog>`);
+    const dialog = document.getElementById('orderEditDialog'); dialog.showModal();
+    dialog.querySelector('[data-close-order-edit]').onclick = () => dialog.close();
+    dialog.querySelector('form').onsubmit = async (event) => { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget)); await saveManagement('/api/admin/orders/' + o.id, 'PUT', data, true); dialog.close(); dialog.remove(); await load(); };
   }));
   v.querySelectorAll('[data-reset-booking]').forEach((button) => button.addEventListener('click', () => {
     if (confirm('Have you checked the PostEx portal and confirmed that no shipment exists for this order reference?')) {
