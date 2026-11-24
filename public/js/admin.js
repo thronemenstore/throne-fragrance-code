@@ -75,7 +75,7 @@ function render() {
         <td>${o.items.map((i) => esc(i.name) + ' × ' + i.qty).join('<br>')}</td>
         <td><strong>${money(o.total)}</strong><br><span class="muted">Advance ${money(o.advance_paid)} · Remaining ${money(o.total - o.advance_paid)}</span></td>
         <td>${esc(o.payment_method)}<br><span class="muted">${esc(o.shipping_method)}</span></td>
-        <td><select onchange="setStatus(${o.id}, this.value)">
+        <td><select class="status-select" onchange="setStatus(${o.id}, this.value)">
           ${orderStatuses.map((s) => `<option ${o.status === s ? 'selected' : ''}>${s}</option>`).join('')}
         </select></td>
         <td><form class="shipment-form" data-order-id="${o.id}">

@@ -319,6 +319,9 @@ body:has(.drawer[open]) { overflow: hidden; }
 .orders-table td { line-height: 1.45; }
 .orders-table th, .orders-table td { padding-inline: 8px; }
 .orders-table input:not([type="checkbox"]), .orders-table select { width: 100%; min-width: 0; }
+.orders-table .status-select { appearance: none; cursor: pointer; padding-right: 34px; background-color: #fff; background-image: linear-gradient(45deg, transparent 50%, var(--forest) 50%), linear-gradient(135deg, var(--forest) 50%, transparent 50%); background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.orders-table .status-select:hover { border-color: var(--gold); }
+.orders-table .status-select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgb(190 143 45 / .16); transform: translateY(-1px); outline: none; }
 .orders-table .btn { min-height: 38px; font-size: .82rem; }
 .orders-table .muted { font-size: .82rem; }
 @media (max-width: 900px) {
