@@ -24,6 +24,7 @@ async function load() {
     const response = await fetch('/api/admin');
     if (!response.ok) throw new Error();
     ADMIN = await response.json();
+    ADMIN.orders = (ADMIN.orders || []).map((order) => ({ ...order, items: Array.isArray(order.items) ? order.items : (() => { try { return JSON.parse(order.items || '[]'); } catch { return []; } })() }));
     render();
   } catch {
     $('#adminView').innerHTML = '<p class="panel-box" role="alert">Store data could not be loaded. Refresh the page to try again.</p>';
