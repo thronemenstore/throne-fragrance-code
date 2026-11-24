@@ -1,9 +1,9 @@
 // Shared by storefront previews and server-side checkout.
 (function () {
   function promoAvailable(lines, promo, settings) {
-    const promoCode = (settings.promo_code || 'THRONE10').toUpperCase();
+    const promoCodes = String(settings.promo_codes || settings.promo_code || 'THRONE10').split(',').map((code) => code.trim().toUpperCase()).filter(Boolean);
     const subtotal = lines.reduce((sum, line) => sum + line.price * line.qty, 0);
-    return settings.promo_enabled !== '0' && !!promo && promo.trim().toUpperCase() === promoCode &&
+    return settings.promo_enabled !== '0' && !!promo && promoCodes.includes(promo.trim().toUpperCase()) &&
       subtotal >= Number(settings.promo_minimum || 0);
   }
   function orderDiscount(lines, promo, settings) {

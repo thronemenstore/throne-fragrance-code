@@ -147,6 +147,7 @@ function render() {
       <form class="settings-form">
         <label><input type="checkbox" name="promo_enabled" ${ADMIN.settings.promo_enabled !== '0' ? 'checked' : ''}> Enable promo code</label>
         <div class="field"><label for="promoCode">Promo code</label><input id="promoCode" name="promo_code" value="${esc(ADMIN.settings.promo_code || 'THRONE10')}" required maxlength="40"></div>
+        <div class="field"><label for="promoCodes">Additional promo codes</label><input id="promoCodes" name="promo_codes" value="${esc(ADMIN.settings.promo_codes || '')}" placeholder="WELCOME15, VIP20 (comma separated)"></div>
         <div class="field"><label for="promoPercent">Promo discount (%)</label><input id="promoPercent" type="number" name="promo_percent" min="0" max="100" step="0.01" value="${esc(ADMIN.settings.promo_percent || 10)}" required></div>
         <div class="field"><label for="promoMinimum">Minimum subtotal (Rs.)</label><input id="promoMinimum" type="number" name="promo_minimum" min="0" value="${esc(ADMIN.settings.promo_minimum || 0)}" required></div>
         <label><input type="checkbox" name="bundle_enabled" ${ADMIN.settings.bundle_enabled !== '0' ? 'checked' : ''}> Enable signature trio offer</label>
