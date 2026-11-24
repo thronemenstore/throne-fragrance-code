@@ -283,7 +283,9 @@ body:has(.drawer[open]) { overflow: hidden; }
 .panel-box table tr:not(:first-child):hover { background: #fcfbf7; }
 .panel-box table td { vertical-align: middle; }
 .product-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; padding: 12px; background: var(--surface); border: 1px solid var(--line); }
-.product-edit[open] .product-edit-grid { position: absolute; right: 0; top: 36px; width: min(420px, 68vw); margin: 0; z-index: 30; box-shadow: 0 18px 42px rgba(20,40,32,.18); border-radius: 6px; }
+.product-edit[open] .product-edit-grid { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(560px, calc(100vw - 32px)); max-height: min(680px, calc(100vh - 48px)); overflow-y: auto; margin: 0; padding: 24px; z-index: 101; background: #fffdf8; box-shadow: 0 24px 80px rgba(20,40,32,.28); border: 1px solid rgba(129,96,41,.35); border-radius: 10px; }
+.product-edit[open] .product-edit-grid::before { content: 'Edit product details'; grid-column: 1 / -1; color: var(--forest); font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; }
+.product-edit[open]::after { content: ''; position: fixed; inset: 0; z-index: 100; background: rgba(15,36,28,.46); backdrop-filter: blur(2px); }
 .product-edit[open] { position: relative; }
 .product-edit-grid label { display: grid; gap: 4px; font-size: .72rem; font-weight: 700; color: var(--muted); }
 .product-edit-grid .wide { grid-column: 1 / -1; }
