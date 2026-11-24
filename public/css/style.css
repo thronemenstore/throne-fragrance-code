@@ -282,8 +282,21 @@ body:has(.drawer[open]) { overflow: hidden; }
 .admin-login-submit:hover { background: #102d23; border-color: #102d23; }
 @media (max-width: 680px) { .admin-login-card { grid-template-columns: 1fr; gap: 24px; padding: 30px 24px; } .admin-login-card .eyebrow { margin-top: 34px; } .admin-login-form-wrap { padding-left: 0; border-left: 0; border-top: 1px solid #e4dfd3; padding-top: 24px; } }
 .admin-header { background: #fff; border-bottom: 1px solid var(--line); }
+.admin-menu-toggle { display: none; }
+.admin-menu-close { display: none; }
 .admin-header-actions { display: flex; align-items: center; gap: 8px; }
 @media (max-width: 560px) { .admin-header-actions .btn:first-child { display: none; } .admin-header-actions .btn { padding: 9px 11px; } }
+@media (max-width: 700px) {
+  .admin-menu-toggle { display: inline-flex; flex: 0 0 42px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; width: 42px; height: 42px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--forest); }
+  .admin-menu-close { display: block; }
+  .admin-menu-toggle span { display: block; width: 21px; height: 2px; margin: 0; border-radius: 2px; background: currentColor; }
+  .admin-header .head-row { gap: 10px; }
+  .admin-tabs { position: fixed; z-index: 300; inset: 0 auto 0 0; width: min(290px, 82vw); margin: 0; padding: 82px 18px 24px; background: #fffdf8; box-shadow: 18px 0 50px rgba(15,36,28,.2); transform: translateX(-105%); transition: transform .28s ease; overflow-y: auto; display: flex; flex-direction: column; align-items: stretch; gap: 8px; border: 0; }
+  .admin-tabs.is-open { transform: translateX(0); }
+  .admin-tabs::before { content: 'Store navigation'; color: var(--forest); font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; }
+  .admin-menu-close { position: absolute; top: 20px; right: 16px; width: 34px; height: 34px; border: 0; background: transparent; color: var(--forest); font-size: 2rem; line-height: 1; cursor: pointer; }
+  .admin-tabs .btn { width: 100%; text-align: left; padding: 13px 15px; }
+}
 .admin-main { padding-top: clamp(22px, 4vw, 48px); padding-bottom: 40px; }
 .stat-grid { margin-block: 22px; }
 .stat { border-radius: 6px; }

@@ -463,4 +463,7 @@ window.saveSettings = async () => {
   alert('Settings saved.'); load();
 };
 document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => { tab = b.dataset.tab; render(); }));
+document.getElementById('adminMenuToggle')?.addEventListener('click', () => { const nav = document.querySelector('.admin-tabs'); const open = nav?.classList.toggle('is-open'); document.getElementById('adminMenuToggle').setAttribute('aria-expanded', String(open)); });
+document.getElementById('adminMenuClose')?.addEventListener('click', () => { document.querySelector('.admin-tabs')?.classList.remove('is-open'); document.getElementById('adminMenuToggle')?.setAttribute('aria-expanded', 'false'); });
+document.querySelector('.admin-tabs')?.addEventListener('click', (event) => { if (event.target.matches('[data-tab]')) document.querySelector('.admin-tabs').classList.remove('is-open'); });
 load();
