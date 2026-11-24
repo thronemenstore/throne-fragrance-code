@@ -731,7 +731,7 @@ function renderRoute() {
     window.thronePixel.track('InitiateCheckout', { currency: 'PKR', value: bagSubtotal() - bagDiscount() });
   }
   const section = document.getElementById(location.hash.slice(2));
-  if (section) section.scrollIntoView();
+  if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   else window.scrollTo(0, 0);
 }
 window.addEventListener('hashchange', renderRoute);
