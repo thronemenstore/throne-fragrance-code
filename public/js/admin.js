@@ -215,6 +215,7 @@ function render() {
       <div class="field"><label>Instagram URL</label><input id="set-instagram" value="${esc(s.instagram || '')}"></div>
       <div class="field"><label>Free shipping over (Rs.)</label><input id="set-free_ship_threshold" value="${esc(s.free_ship_threshold || '')}"></div>
       <div class="field"><label>Announcement bar</label><input id="set-announcement" value="${esc(s.announcement || '')}"></div>
+      <div class="field"><label>Order notification email</label><input id="set-order_notification_email" type="email" value="${esc(s.order_notification_email || '')}" placeholder="fahadkhan28919@gmail.com"></div>
       <button class="btn gold" onclick="saveSettings()">Save Settings</button></div>
       <div class="panel-box"><h3>Reset admin password</h3><p class="muted">Use at least 10 characters. You will be signed out after changing it.</p>
       <form id="passwordResetForm" class="settings-form"><div class="field"><label>Current password</label><span class="password-field"><input name="currentPassword" type="password" required><button type="button" class="password-toggle" aria-label="Show password"><svg class="eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.5"/></svg></button></span></div><div class="field"><label>New password</label><span class="password-field"><input name="newPassword" type="password" minlength="10" required><button type="button" class="password-toggle" aria-label="Show password"><svg class="eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.5"/></svg></button></span></div><button class="btn gold" type="submit">Update password</button><p role="status" class="muted"></p></form></div>`;
@@ -449,7 +450,7 @@ async function deleteAccount(event) {
 }
 window.saveSettings = async () => {
   const body = {};
-  ['whatsapp', 'instagram', 'free_ship_threshold', 'announcement']
+  ['whatsapp', 'instagram', 'free_ship_threshold', 'announcement', 'order_notification_email']
     .forEach((k) => { body[k] = document.getElementById('set-' + k).value; });
   const response = await fetch('/api/admin/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   if (!response.ok) { alert((await response.json()).error || 'Settings could not be saved.'); return; }
