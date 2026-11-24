@@ -216,7 +216,7 @@ function render() {
       <div class="field"><label>Free shipping over (Rs.)</label><input id="set-free_ship_threshold" value="${esc(s.free_ship_threshold || '')}"></div>
       <div class="field"><label>Announcement bar</label><input id="set-announcement" value="${esc(s.announcement || '')}"></div>
       <div class="field"><label>Order notification email</label><input id="set-order_notification_email" type="email" value="${esc(s.order_notification_email || '')}" placeholder="fahadkhan28919@gmail.com"></div>
-      <button class="btn gold" onclick="saveSettings()">Save Settings</button></div>
+      <button class="btn gold" onclick="saveSettings()">Save Settings</button> <button class="btn" id="testOrderEmail" type="button">Send test email</button><p id="emailTestStatus" class="muted" role="status"></p></div>
       <div class="panel-box"><h3>Reset admin password</h3><p class="muted">Use at least 10 characters. You will be signed out after changing it.</p>
       <form id="passwordResetForm" class="settings-form"><div class="field"><label>Current password</label><span class="password-field"><input name="currentPassword" type="password" required><button type="button" class="password-toggle" aria-label="Show password"><svg class="eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.5"/></svg></button></span></div><div class="field"><label>New password</label><span class="password-field"><input name="newPassword" type="password" minlength="10" required><button type="button" class="password-toggle" aria-label="Show password"><svg class="eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.4-5 9.5-5 9.5 5 9.5 5-3.4 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.5"/></svg></button></span></div><button class="btn gold" type="submit">Update password</button><p role="status" class="muted"></p></form></div>`;
   }
@@ -233,6 +233,12 @@ function render() {
     const input = button.parentElement.querySelector('input'); const visible = input.type === 'text';
     input.type = visible ? 'password' : 'text'; button.classList.toggle('is-visible', !visible); button.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
   }));
+  v.querySelector('#testOrderEmail')?.addEventListener('click', async (event) => {
+    const button = event.currentTarget; const status = v.querySelector('#emailTestStatus');
+    button.disabled = true; status.textContent = 'Sending test emailâ€¦';
+    try { const response = await fetch('/api/admin/email-test', { method: 'POST', credentials: 'same-origin' }); const data = await response.json(); status.textContent = response.ok ? `Sent to ${data.recipient}. Check inbox and spam.` : (data.body || data.error || 'Email could not be sent.'); }
+    catch (_) { status.textContent = 'Server connection failed.'; } finally { button.disabled = false; }
+  });
   const orderFilters = v.querySelectorAll('[data-order-filter]');
   if (orderFilters.length) {
     const applyFilter = () => {
