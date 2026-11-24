@@ -291,6 +291,7 @@ body:has(.drawer[open]) { overflow: hidden; }
 .product-edit-grid .wide { grid-column: 1 / -1; }
 .product-edit-grid input, .product-edit-grid textarea { width: 100%; padding: 8px; border: 1px solid var(--line2); background: #fff; font: inherit; }
 .product-edit-grid textarea { min-height: 58px; resize: vertical; }
+.product-edit-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); margin-top: 4px; }
 .table-scroll { overflow-x: auto; }
 .table-scroll table { min-width: 530px; }
 .table-scroll th { background: #f1f2ee; font-size: .8125rem; }
