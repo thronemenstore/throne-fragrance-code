@@ -67,7 +67,7 @@ function render() {
           ${label} <span>${status === 'all' ? ADMIN.orders.length : counts.get(status) || 0}</span>
         </button>`).join('')}
       </div>
-      ${ADMIN.orders.length ? `<div class="bulk-actions"><label><input type="checkbox" id="selectAllPostex"> Select all</label><button class="btn gold small" type="button" id="bulkPostexBook">Book selected with PostEx</button></div><div class="table-scroll" tabindex="0"><table><tr><th>Select</th><th>Ref</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>PostEx</th><th>Slip</th></tr>
+      ${ADMIN.orders.length ? `<div class="bulk-actions"><label><input type="checkbox" id="selectAllPostex"> Select all orders</label><button class="btn gold small" type="button" id="bulkPostexBook">Book selected with PostEx</button></div><div class="table-scroll orders-scroll" tabindex="0"><table class="orders-table"><tr><th>Select</th><th>Ref</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>PostEx</th><th>Slip</th></tr>
       ${ADMIN.orders.map((o) => `<tr data-order-status="${esc(o.status)}">
         <td><input type="checkbox" class="postex-order-select" value="${o.id}" ${o.courier_tracking ? 'disabled' : ''} aria-label="Select ${esc(o.ref)} for PostEx booking"></td>
         <td><strong>${esc(o.ref)}</strong><br><span class="muted">${esc(o.created_at.slice(0, 10))}</span></td>
