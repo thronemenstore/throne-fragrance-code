@@ -227,6 +227,11 @@ input[type="radio"], input[type="checkbox"] { min-height: auto; accent-color: va
 tr[hidden] { display: none !important; }
 .order-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 .order-filters .btn span { display: inline-block; min-width: 1.5em; margin-left: 4px; padding-inline: 4px; border-radius: 99px; background: rgb(127 127 127 / .16); text-align: center; }
+.bulk-actions { display: flex; align-items: center; gap: 12px; margin: 14px 0 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fafaf7; }
+.bulk-actions label { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: .9rem; }
+.bulk-actions input { accent-color: var(--forest); }
+.shipment-form { display: grid; gap: 7px; min-width: 125px; }
+.shipment-form .btn { white-space: nowrap; }
 .form-grid > * { min-width: 0; }
 footer { padding-block: 38px; color: #e8ede8; background: var(--forest); }
 .footer-grid { grid-template-columns: 1.45fr 1fr 1fr 1.15fr; }
@@ -331,6 +336,8 @@ body:has(.drawer[open]) { overflow: hidden; }
   .toolbar input { grid-column: 1 / -1; }
   .toolbar input, .toolbar select { min-width: 0; width: 100%; }
   .admin-tabs { gap: 6px; }
+  .bulk-actions { align-items: stretch; flex-direction: column; gap: 9px; }
+  .bulk-actions .btn { width: 100%; }
   .table-scroll { overflow: visible; }
   .table-scroll table, .table-scroll tbody { display: block; min-width: 0; }
   .table-scroll tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; padding-block: 14px; border-bottom: 1px solid var(--line); }
